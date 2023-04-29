@@ -31,16 +31,15 @@ export default {
         async sendMessage() { // Send message
             if (this.userInput.trim()) {
                 this.messages.push({sender: 'user', text: `User: ${this.userInput}`});
-                this.userInput = '';
-
-                // Simulate bot response from a mock server
                 const response = await this.getBotResponse(this.userInput);
-                this.messages.push({sender: 'bot', text: `Bot: ${response}`});
+                this.messages.push({sender: 'bot', text: `Bot: ${response.data}`});
             }
         },
-        async getBotResponse() {
+        async getBotResponse(userInput) {
             try {
-                const response = await axios.get('http://localhost:5555');
+                const response = await axios.post('http://localhost:5000/ask', {
+                    question: userInput
+                });
                 return response.data;
             } catch (error) {
                 console.error('Error getting response from external service:', error);
